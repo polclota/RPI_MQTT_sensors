@@ -1,0 +1,1 @@
+cp -r . /mnt/w10/d/Dropbox/_myCode/IoT/Python/RPI_MQTT_sensors/

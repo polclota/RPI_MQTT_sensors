@@ -1,0 +1,17 @@
+{
+  "name": "rpi1 built in gpio pc_power",
+  "device": {
+    "identifiers": "rpi1_built_in",
+    "name": "rpi1 built in",
+    "sw_version": "domIoT (beta) v0.3",
+    "manufacturer": "Raspberry pi foundation",
+    "model": "PI3B+"
+  },
+  "payload_on": "ON",
+  "payload_off": "OFF",
+  "device_class": "light",
+  "state_topic": "rpi1_built_in/binary_sensor/gpio_pc_power/state",
+  "command_topic": "rpi1_built_in/binary_sensor/gpio_pc_power/cmd",
+  "availability_topic": "rpi1_built_in/binary_sensor/gpio_pc_power/available",
+  "unique_id": "rpi1_built_in_gpio_pc_power"
+}

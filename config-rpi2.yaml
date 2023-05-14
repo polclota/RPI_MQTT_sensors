@@ -1,0 +1,116 @@
+general:
+  company_name: domIoT
+  device_name: hostname # 'hostname' will be replaced with device hostname
+  manufacturer: Raspberry pi foundation
+  sw_version: domIoT (beta) v0.3
+  model: PI3B
+  platforms: # sensor that interfere with lora or ble must be commented 
+    - bme280
+    - bh1750
+    - dht
+    # - onewire
+  status_leds:
+  - pin: 19
+    name: green
+    interval: 0.3
+  - pin: 13
+    name: red
+    interval: 0.3
+  version: 0.1
+  scan_interval: 600
+  temperature: 
+    unit_of_measurement: °C
+    device_class: temperature
+  humidity: 
+    unit_of_measurement: "%"
+    device_class: humidity
+  battery: 
+    unit_of_measurement: "%"
+    device_class: battery
+  pressure: 
+    unit_of_measurement: mB
+    device_class: pressure
+  illuminance: 
+    unit_of_measurement: lux
+    device_class: illuminance
+ 
+mqtt:
+  auto_configure: True
+  host: localhost
+  # host: rpi.clota.com
+  port: 1883
+  user: pi
+  password: domiot
+  mqtt_delay: 0.5
+  discovery_prefix: homeassistant
+  sensor: sensor
+  state: state
+  command: command
+  config: config
+  built_in: built in # bulti in sensors name
+
+# lora_config:
+#    carrier_frequency: 434.0 # MHz
+#    bandwidth: 125.0 # kHz
+#    spreading_factor: 9
+  #  coding rate:                 7
+  #  sync word:                   0x12
+  #  output power:                17 dBm
+  #  current limit:               100 mA
+  #  preamble length:             8 symbols
+  #  amplifier gain:              0 (automatic gain control)
+
+lora:
+  - device: node_mcu_25794f
+    manufacturer: domIoT
+    sw_version: v0.1
+    model: LoRa sensor
+    scan_interval: 600 # in seconds
+    sensors:
+    - sensor: dht22
+      monitored_conditions:
+      - temperature
+      - humidity
+  #   - sensor: w1
+  #     monitored_conditions:
+  #     - temperature
+  # - device: node_mcu
+  #   sensors:
+  #   - sensor: ambient
+  #     monitored_conditions:
+  #     - temperature
+  #     - humidity
+  #     - pressure
+  #   - sensor: onewire
+  #     monitored_conditions:
+  #     - temperature
+  # - device: wemos
+  #   sensors:
+  #   - sensor: ambient
+  #     monitored_conditions:
+  #     - temperature
+  #     - humidity
+  #     - pressure
+
+# ble:
+#   - device: Outdoors
+#     platform: LYWSD03MMC
+#     manufacturer: Xiaomi
+#     sw_version: XX
+#     model: LYWSD03MMC
+#     mac: A4:C1:38:89:F7:CA
+#     monitored_conditions:
+#     - temperature
+#     - humidity
+#     - battery
+
+keys_commands:
+  'u': update
+  '1': relay 1
+  '2': relay 2
+  '0': timer 0
+  '3': timer 30
+  '6': timer 60
+  '9': timer 90
+  't': timer value
+  'r': restart

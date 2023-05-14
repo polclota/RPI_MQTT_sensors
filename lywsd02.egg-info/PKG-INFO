@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: lywsd02
+Version: 0.0.7
+Summary: Lywsd02 BLE sendor Library
+Home-page: https://github.com/h4/lywsd02
+Author: h4
+Author-email: mikhail.baranov@gmail.com
+License: MIT
+Description: Library to read data from Mi Temperature and Humidity Sensor (E-Inc version with Clock)
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.7
+Description-Content-Type: text/x-rst

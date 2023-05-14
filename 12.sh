@@ -1,0 +1,1 @@
+rsync -r --progress /home/pi/python/RPI_MQTT_sensors/ pi@rpi2.local:/home/pi/python/RPI_MQTT_sensors 
