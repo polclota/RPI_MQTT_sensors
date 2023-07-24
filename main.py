@@ -1,18 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys
 import time
 import datetime
 import config
-
 import sensors
-import socket
-
-import LYWSD03MMC
 import mqtt_i
 import leds
-import RPi.GPIO as GPIO
+
+if config.general['hardware'].lower() == "opi":
+    from pyA20.gpio import gpio as GPIO
+else:
+    import RPi.GPIO as GPIO
 if 'lora' in config.config:
     import lora
 
@@ -115,4 +114,7 @@ except KeyboardInterrupt as k:
         if "binary_sensor" in config.config: 
             mqtt_i.unaval(mqtt_i.mqtt["binary_sensor"])
         mqtt_i.mqtt_disconnect()
-    GPIO.cleanup()
+    if config.general['hardware'].lower() == "opi":
+        pass
+    else:    
+        GPIO.cleanup()

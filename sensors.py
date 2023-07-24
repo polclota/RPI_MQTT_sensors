@@ -1,16 +1,8 @@
-import sys
-import Adafruit_DHT
-
-import socket
-import LYWSD03MMC
-import smbus
 import config
 import leds
 import time
-import datetime
 import mqtt_i
 
-bus = smbus.SMBus(1)
 
 if 'onewire' in config.general['platforms']:
     from w1thermsensor import W1ThermSensor  # pip3 install w1thermsensor
@@ -22,6 +14,8 @@ if 'onewire' in config.general['platforms']:
             print("Error: ", e)
 
 if 'bme280' in config.general['platforms']:
+    import smbus
+    bus = smbus.SMBus(1)
     from i2csense.bme280 import BME280  # pip3 install i2csense
     def bme280(addr):
         try:
@@ -37,6 +31,7 @@ if 'bme280' in config.general['platforms']:
 
 # Type of sensor, can be Adafruit_DHT.DHT11, Adafruit_DHT.DHT22, or Adafruit_DHT.AM2302.
 if 'dht' in config.general['platforms']:
+    import Adafruit_DHT
     def dht_type():
         return Adafruit_DHT.AM2302
     def dht(typ, pin):
@@ -101,6 +96,7 @@ def check_sensors(a, n):
                 i = bh1750(s[ss]["i2c_address"])
 
             if platform.lower() == "lywsd03mmc":
+                import LYWSD03MMC
                 t, h, b = LYWSD03MMC.LYWSD03MMC(s[ss]["mac"])
 
             if t + h + p + i != 0 and s[ss]["monitored_conditions"]:
