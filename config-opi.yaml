@@ -1,0 +1,54 @@
+general:
+  company_name: domIoT
+  device_name: hostname # 'hostname' will be replaced with device hostname
+  manufacturer: Orange pi foundation
+  sw_version: domIoT (beta) v0.4
+  model: One v2
+  hardware: rpi # opi # options are: rpi, opi
+  platforms: # sensor that interfere with lora or ble must be commented 
+    - none
+  version: 0.1
+  scan_interval: 100
+
+mqtt:
+  auto_configure: True
+  # host: homeassistant.local
+  host: 192.168.88.50
+  port: 1883
+  user: pi
+  password: domiot
+  mqtt_delay: 0.1
+  discovery_prefix: homeassistant
+  sensor: sensor
+  switch: switch
+  binary_sensor: binary_sensor
+  state: state
+  command: cmd
+  config: config
+  availability: available
+  built_in: built in # bulti in sensors name
+  online: online
+  offline: offline
+  payload_on: "ON"
+  payload_off: "OFF"
+  state_on: "ON"
+  state_off: "OFF"
+  payload_not_available: online
+  payload_available: offline
+
+switch:
+  - platform: gpio
+    pin: PA7
+    name: red LED
+    icon: mdi:led-off
+  - platform: gpio
+    pin: PA8
+    name: green LED
+    icon: mdi:led-off
+
+binary_sensor:
+  - platform: gpio
+    device_class: power
+    name: PC power
+    pin: 19
+    bouncetime: 500

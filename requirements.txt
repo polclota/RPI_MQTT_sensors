@@ -1,3 +1,4 @@
+# RPi.GPIO only for Raspberry Pi
 Adafruit_DHT
 pyyaml
 bluepy

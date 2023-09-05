@@ -2,13 +2,16 @@ import paho.mqtt.client as mqttp
 import random
 import time
 import config as config
-import RPi.GPIO as GPIO
+if config.general['hardware'].lower() == "opi":
+    from pyA20.gpio import gpio
+    from pyA20.gpio import port
+else:
+    import RPi.GPIO as GPIO
+    GPIO.setwarnings(False)  # Ignore warning for now
+    GPIO.setmode(GPIO.BCM)  # Use physical pin numbering
 import sys
-import threading
 
 done_subs = False
-GPIO.setwarnings(False)  # Ignore warning for now
-GPIO.setmode(GPIO.BCM)  # Use physical pin numbering
 
 if "mqtt" in config.config:
     mqtt = config.config['mqtt']
@@ -38,10 +41,16 @@ def on_message(client, userdata, msg):
 
                 if m.lower() == mqtt["payload_on"].lower():
                     s = mqtt["state_on"]
-                    GPIO.output(pin, GPIO.HIGH)
+                    if config.general['hardware'].lower() == "opi":
+                        gpio.output(getattr(port,pin), gpio.HIGH)
+                    else:
+                        GPIO.output(pin, GPIO.HIGH)
                 elif m.lower() == mqtt["payload_off"].lower():
                     s = mqtt["state_off"]
-                    GPIO.output(pin, GPIO.LOW)
+                    if config.general['hardware'].lower() == "opi":
+                        gpio.output(getattr(port,pin), gpio.LOW)
+                    else:
+                        GPIO.output(pin, GPIO.LOW)
 
                 mqttc.publish(t.replace(mqtt["command"], mqtt["state"]), s)
 
@@ -276,34 +285,40 @@ def binary_sensor_loop():
         global pinStatus, c
         cc = config.config['binary_sensor']
         for s in cc:
-            p = GPIO.input(s["pin"])
-            if pinStatus[s["pin"]] != p and pinStatus[s["pin"]] != 3:
-                buttonEventHandlerDone = True
-                pinStatus[s["pin"]] = p
-                r = payload(s, p)
-                print(c,'2-Publishig:', s['name'], r, end='')
-                t = domain_base(s, mqtt["binary_sensor"]) + '/' + mqtt["state"]
-                if mqttc.publish(t, r):
-                    print(', done!')
-                else:
-                    print(', error!')
+            if config.general['hardware'].lower() == "opi":
+                pass
+            else:
+                p = GPIO.input(s["pin"])
+                if pinStatus[s["pin"]] != p and pinStatus[s["pin"]] != 3:
+                    buttonEventHandlerDone = True
+                    pinStatus[s["pin"]] = p
+                    r = payload(s, p)
+                    print(c,'2-Publishig:', s['name'], r, end='')
+                    t = domain_base(s, mqtt["binary_sensor"]) + '/' + mqtt["state"]
+                    if mqttc.publish(t, r):
+                        print(', done!')
+                    else:
+                        print(', error!')
 
 
 def setupPins(domain, direction):
     global pinStatus
     for s in config.config[domain]:
         if s["platform"].lower() == "gpio":
-            GPIO.setup(s["pin"], direction)
-            if domain == mqtt['binary_sensor']:
-                pinStatus[s["pin"]] = 3
-                if 'bouncetime' in s:
-                    bt = s['bouncetime']
-                else:
-                    bt = 200
-                GPIO.add_event_detect(s['pin'],
-                                      GPIO.BOTH,
-                                      callback=buttonEventHandler,
-                                      bouncetime=bt)
+            if config.general['hardware'].lower() == "opi":
+                pass
+            else:
+                GPIO.setup(s["pin"], direction)
+                if domain == mqtt['binary_sensor']:
+                    pinStatus[s["pin"]] = 3
+                    if 'bouncetime' in s:
+                        bt = s['bouncetime']
+                    else:
+                        bt = 200
+                    GPIO.add_event_detect(s['pin'],
+                                        GPIO.BOTH,
+                                        callback=buttonEventHandler,
+                                        bouncetime=bt)
 
 
 def domain_subs(domain):
@@ -380,8 +395,12 @@ def define_MQTT_sensors(delete=False, retain=False):
                  retain)
 
 
-setupPins(mqtt["switch"], GPIO.OUT)
-setupPins(mqtt["binary_sensor"], GPIO.IN)
+if config.general['hardware'].lower() == "opi":
+    setupPins(mqtt["switch"], gpio.OUTPUT)
+    setupPins(mqtt["binary_sensor"], gpio.INPUT)
+else:
+    setupPins(mqtt["switch"], GPIO.OUT)
+    setupPins(mqtt["binary_sensor"], GPIO.IN)
 
 
 def main():
@@ -397,7 +416,10 @@ def main():
     except KeyboardInterrupt as k:
         print('Program exited with: {0}'.format(k))
         mqttc.loop_stop()
-        GPIO.cleanup()
+        if config.general['hardware'].lower() == "opi":
+            pass
+        else:
+            GPIO.cleanup()
 
 
 
