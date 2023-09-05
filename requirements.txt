@@ -3,3 +3,4 @@ pyyaml
 bluepy
 smbus2
 paho-mqtt
+i2csense

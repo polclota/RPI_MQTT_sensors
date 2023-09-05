@@ -130,8 +130,9 @@ def all_conditions(delete, s, ss, platform, domain, device_name, sensor_name,
                 pl += '"state_topic": "' + state_topic + '",'
                 pl += '"unique_id": "' + unique_id + '",'
                 pl += '"device_class":"' + c + '",'
-                pl += '"unit_of_measurement": "' + config.general[c][
-                    "unit_of_measurement"]
+                if config.general.get(c):
+                    pl += '"unit_of_measurement": "' + config.general[c][
+                        "unit_of_measurement"]
                 pl += '"}'
 
                 # print('Setting up:', topic)

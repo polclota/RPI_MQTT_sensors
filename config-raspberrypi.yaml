@@ -5,9 +5,9 @@ general:
   sw_version: domIoT (beta) v0.3
   model: PI3B+
   platforms: # sensor that interfere with lora or ble must be commented 
-    - none
-  #   - bme280
-  #   - bh1750
+    # - none
+    - bme280
+    - bh1750
     # - dht
     # - onewire
   # status_leds:
@@ -19,21 +19,21 @@ general:
   #   interval: 0.3
   version: 0.1
   scan_interval: 100
-  # temperature: 
-  #   unit_of_measurement: °C
-  #   device_class: temperature
-  # humidity: 
-  #   unit_of_measurement: "%"
-  #   device_class: humidity
-  # battery: 
-  #   unit_of_measurement: "%"
-  #   device_class: battery
-  # pressure: 
-  #   unit_of_measurement: mB
-  #   device_class: pressure
-  # illuminance: 
-  #   unit_of_measurement: lux
-  #   device_class: illuminance
+  temperature: 
+    unit_of_measurement: °C
+    device_class: temperature
+  humidity: 
+    unit_of_measurement: "%"
+    device_class: humidity
+  battery: 
+    unit_of_measurement: "%"
+    device_class: battery
+  pressure: 
+    unit_of_measurement: mB
+    device_class: pressure
+  illuminance: 
+    unit_of_measurement: lux
+    device_class: illuminance
 
 mqtt:
   auto_configure: True
@@ -87,9 +87,13 @@ switch:
     name: red LED
     icon: mdi:led-off
   - platform: gpio
-    pin: 21
+    pin: 25
     name: yellow LED
     icon: mdi:led-off
+  - platform: gpio
+    pin: 18
+    name: Lens light
+    icon: mdi:checkbox-blank-circle-outline
 
 binary_sensor:
   # - platform: gpio
@@ -111,22 +115,23 @@ binary_sensor:
   - platform: gpio
     device_class: power
     name: PC power
-    pin: 19
-    bouncetime: 500
+    pin: 5
+    bouncetime: 300
+    icon: mdi:desktop-tower
 
-# sensor:
-  # - platform: bme280
-  #   name: Ambient
-  #   i2c_address: 0x77
-  #   monitored_conditions:
-  #   - temperature
-  #   - humidity
-  #   - pressure
-  # - platform: bh1750
-  #   name: Iluminance
-  #   monitored_conditions:
-  #   - illuminance
-  #   i2c_address: 0x23
+sensor:
+  - platform: bme280
+    name: Ambient
+    i2c_address: 0x77
+    monitored_conditions:
+    - temperature
+    - humidity
+    - pressure
+  - platform: bh1750
+    name: Iluminance
+    monitored_conditions:
+    - illuminance
+    i2c_address: 0x23
   # - platform: dht
   #   name: DHT
   #   sensor: DHT22

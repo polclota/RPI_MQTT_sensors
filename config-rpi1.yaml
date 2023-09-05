@@ -90,6 +90,10 @@ switch:
     pin: 21
     name: yellow LED
     icon: mdi:led-off
+  - platform: gpio
+    pin: 18
+    name: Lens light
+    icon: mdi:checkbox-blank-circle-outline
 
 binary_sensor:
   # - platform: gpio
